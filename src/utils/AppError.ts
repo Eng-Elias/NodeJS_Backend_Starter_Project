@@ -1,4 +1,4 @@
-import { AuthUtils } from "./AuthUtils";
+import { ApiUtils } from './ApiUtils';
 
 export class AppError extends Error {
   public statusCode: number;
@@ -9,7 +9,7 @@ export class AppError extends Error {
     super(message);
 
     this.statusCode = statusCode;
-    this.status = `${statusCode}`.startsWith('4') ? AuthUtils.API_STATUS.Fail : AuthUtils.API_STATUS.ERROR;
+    this.status = `${statusCode}`.startsWith('4') ? ApiUtils.API_STATUS.FAIL : ApiUtils.API_STATUS.ERROR;
     this.isOperational = true;
 
     Error.captureStackTrace(this, this.constructor);

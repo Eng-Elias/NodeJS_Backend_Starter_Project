@@ -4,7 +4,7 @@ import winston from 'winston';
  * Logger utility class.
  */
 export class Logger {
-  private static logger = winston.createLogger({
+  public static logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
     transports: [

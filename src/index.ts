@@ -1,5 +1,6 @@
 import express, { Express } from 'express';
 import cors from 'cors';
+import audit from 'express-requests-logger';
 import { DatabaseUtils } from '@/utils/DatabaseUtils';
 import { createClient } from 'redis';
 import config from '@/config';
@@ -13,6 +14,18 @@ const app: Express = express();
 // Middleware
 app.use(cors());
 app.use(express.json());
+app.use(
+  audit({
+    logger: Logger.logger,
+    request: {
+      maskBody: ['password'],
+      excludeHeaders: ['authorization'],
+    },
+    response: {
+      maskBody: ['session_token'],
+    },
+  }),
+);
 
 // Database connections
 DatabaseUtils.connect();

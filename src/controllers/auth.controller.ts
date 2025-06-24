@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
 import { User } from '@/models/user.model';
 import { AuthUtils } from '@/utils/AuthUtils';
+import { ApiUtils } from '@/utils/ApiUtils';
 import { EmailUtils } from '@/utils/EmailUtils';
 import { AppError } from '@/utils/AppError';
 import { catchAsync } from '@/utils/catchAsync';
@@ -37,7 +38,7 @@ export const register = catchAsync(async (req: Request, res: Response, next: Nex
       );
 
       res.status(201).json({
-        status: AuthUtils.API_STATUS.SUCCESS,
+        status: ApiUtils.API_STATUS.SUCCESS,
         message: 'Registration successful. Please check your email to verify your account.',
       });
     } catch (error) {
@@ -56,7 +57,7 @@ export const register = catchAsync(async (req: Request, res: Response, next: Nex
     newUser.password = undefined;
 
     res.status(201).json({
-      status: AuthUtils.API_STATUS.SUCCESS,
+      status: ApiUtils.API_STATUS.SUCCESS,
       accessToken,
       refreshToken,
       data: { user: newUser },
@@ -90,7 +91,7 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
   user.password = undefined;
 
   res.status(200).json({
-    status: AuthUtils.API_STATUS.SUCCESS,
+    status: ApiUtils.API_STATUS.SUCCESS,
     accessToken,
     refreshToken,
     data: { user },
@@ -122,7 +123,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response, next: 
   user.password = undefined;
 
   res.status(200).json({
-    status: AuthUtils.API_STATUS.SUCCESS,
+    status: ApiUtils.API_STATUS.SUCCESS,
     accessToken,
     refreshToken,
     data: { user },
@@ -148,7 +149,7 @@ export const refresh = catchAsync(async (req: Request, res: Response, next: Next
   const accessToken = AuthUtils.generateAccessToken({ id: user._id });
 
   res.status(200).json({
-    status: AuthUtils.API_STATUS.SUCCESS,
+    status: ApiUtils.API_STATUS.SUCCESS,
     accessToken,
   });
 });
@@ -161,7 +162,7 @@ export const logout = catchAsync(async (req: Request, res: Response, next: NextF
 
   const decoded = AuthUtils.verifyRefreshToken(refreshToken);
   if (!decoded || typeof decoded !== 'object' || !('id' in decoded) || typeof decoded.id !== 'string') {
-    res.status(200).json({ status: AuthUtils.API_STATUS.SUCCESS, message: 'Logged out' });
+    res.status(200).json({ status: ApiUtils.API_STATUS.SUCCESS, message: 'Logged out' });
     return;
   }
 
@@ -171,7 +172,7 @@ export const logout = catchAsync(async (req: Request, res: Response, next: NextF
     await user.save();
   }
 
-  res.status(200).json({ status: AuthUtils.API_STATUS.SUCCESS, message: 'Logged out successfully' });
+  res.status(200).json({ status: ApiUtils.API_STATUS.SUCCESS, message: 'Logged out successfully' });
 });
 
 export const resendVerificationEmail = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -200,7 +201,7 @@ export const resendVerificationEmail = catchAsync(async (req: Request, res: Resp
       `<p>Please click the following link to verify your email address: <a href="${verificationUrl}">${verificationUrl}</a></p>`
     );
 
-    res.status(200).json({ status: AuthUtils.API_STATUS.SUCCESS, message: 'Verification email sent.' });
+    res.status(200).json({ status: ApiUtils.API_STATUS.SUCCESS, message: 'Verification email sent.' });
   } catch (error) {
     user.emailVerificationToken = undefined;
     user.emailVerificationTokenExpires = undefined;
@@ -231,7 +232,7 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response, nex
       `<p>To reset your password, please click the following link: <a href="${resetUrl}">${resetUrl}</a></p>`
     );
 
-    res.status(200).json({ status: AuthUtils.API_STATUS.SUCCESS, message: 'Password reset token sent to email.' });
+    res.status(200).json({ status: ApiUtils.API_STATUS.SUCCESS, message: 'Password reset token sent to email.' });
   } catch (error) {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
@@ -270,7 +271,7 @@ export const resetPassword = catchAsync(async (req: Request, res: Response, next
   user.password = undefined;
 
   res.status(200).json({
-    status: AuthUtils.API_STATUS.SUCCESS,
+    status: ApiUtils.API_STATUS.SUCCESS,
     accessToken,
     refreshToken,
     data: { user },

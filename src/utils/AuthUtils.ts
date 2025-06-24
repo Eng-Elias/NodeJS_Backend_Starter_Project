@@ -9,12 +9,6 @@ import { CustomJwtPayload } from '@/types/auth.types';
  */
 export class AuthUtils {
 
-  public static API_STATUS = {
-    SUCCESS: 'success',
-    Fail: 'fail',
-    ERROR: 'error',
-  }
-
   /**
    * Hashes a password using bcrypt.
    * @param password - The password to hash.
