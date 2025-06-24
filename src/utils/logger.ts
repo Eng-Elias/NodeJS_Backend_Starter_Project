@@ -9,7 +9,7 @@ export class Logger {
     format: winston.format.json(),
     transports: [
       new winston.transports.Console({
-        format: winston.format.simple(),
+        format: winston.format.prettyPrint({ colorize: true }),
       }),
     ],
   });
