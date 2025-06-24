@@ -37,6 +37,7 @@ const config = {
     pass: process.env.EMAIL_PASS,
     fromName: process.env.EMAIL_FROM_NAME || 'Your App',
     fromEmail: process.env.EMAIL_FROM_EMAIL || 'noreply@yourapp.com',
+    verificationEnabled: process.env.EMAIL_VERIFICATION_ENABLED === 'true',
   },
 };
 

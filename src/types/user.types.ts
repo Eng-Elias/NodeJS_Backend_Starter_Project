@@ -31,6 +31,7 @@ export interface IUser extends Document {
   emailVerificationTokenExpires?: Date;
   passwordResetToken?: string;
   passwordResetExpires?: Date;
+  refreshTokens?: string[];
   lastLogin?: Date;
   deleted?: boolean;
   deletedAt?: Date;

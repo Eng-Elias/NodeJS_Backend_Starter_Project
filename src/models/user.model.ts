@@ -3,6 +3,7 @@ import mongooseDelete from 'mongoose-delete';
 import { IUser, UserRole } from '@/types/user.types';
 import { AuthUtils } from '@/utils/AuthUtils';
 import { auditPlugin } from './plugins/audit.plugin';
+import config from '@/config';
 
 const userSchema = new Schema<IUser>(
   {
@@ -28,7 +29,7 @@ const userSchema = new Schema<IUser>(
     },
     isEmailVerified: {
       type: Boolean,
-      default: false,
+      default: !config.email.verificationEnabled,
     },
     emailVerificationToken: {
       type: String,
@@ -44,6 +45,10 @@ const userSchema = new Schema<IUser>(
     },
     passwordResetExpires: {
       type: Date,
+      select: false,
+    },
+    refreshTokens: {
+      type: [String],
       select: false,
     },
     lastLogin: { type: Date },

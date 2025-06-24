@@ -1,12 +1,20 @@
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import crypto from 'crypto';
 import config from '@/config';
+import { CustomJwtPayload } from '@/types/auth.types';
 
 /**
  * Utility class for authentication-related operations.
  */
 export class AuthUtils {
+
+  public static API_STATUS = {
+    SUCCESS: 'success',
+    Fail: 'fail',
+    ERROR: 'error',
+  }
+
   /**
    * Hashes a password using bcrypt.
    * @param password - The password to hash.
@@ -53,13 +61,31 @@ export class AuthUtils {
    * @param isRefreshToken - Whether the token is a refresh token.
    * @returns The decoded payload if the token is valid, otherwise null.
    */
-  public static verifyToken(token: string, isRefreshToken = false): string | object | null {
+  public static verifyToken(token: string, isRefreshToken = false): CustomJwtPayload | string | null {
     try {
       const secret = isRefreshToken ? config.jwt.refreshSecret : config.jwt.secret;
       return jwt.verify(token, secret);
     } catch (error) {
       return null;
     }
+  }
+
+  /**
+   * Verifies a JWT access token.
+   * @param token - The access token to verify.
+   * @returns The decoded payload if the token is valid, otherwise null.
+   */
+  public static verifyAccessToken(token: string): CustomJwtPayload | string | null {
+    return this.verifyToken(token, false);
+  }
+
+  /**
+   * Verifies a JWT refresh token.
+   * @param token - The refresh token to verify.
+   * @returns The decoded payload if the token is valid, otherwise null.
+   */
+  public static verifyRefreshToken(token: string): CustomJwtPayload | string | null {
+    return this.verifyToken(token, true);
   }
 
   /**

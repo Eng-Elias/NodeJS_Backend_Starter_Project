@@ -17,6 +17,19 @@ export class ValidationUtils {
     password: Joi.string().required(),
   });
 
+  public static refreshTokenSchema = Joi.object({
+    refreshToken: Joi.string().required(),
+  });
+
+  public static emailSchema = Joi.object({
+    email: Joi.string().email().trim().lowercase().required(),
+  });
+
+  public static resetPasswordSchema = Joi.object({
+    password: Joi.string().min(8).required(),
+    passwordConfirm: Joi.ref('password'),
+  });
+
   /**
    * Validates data against a Joi schema.
    * @param schema - The Joi schema to validate against.
