@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import config from '@/config';
 import { AppError } from '@/utils/AppError';
 import { Logger } from '@/utils/logger';
+import { ApiUtils } from '@/utils/ApiUtils';
 
 
 export const AUTH_ERRORS = {
@@ -22,14 +23,17 @@ const sendErrorProd = (err: AppError, res: Response) => {
 
   Logger.error('ERROR 💥', err);
   return res.status(500).json({
-    status: 'error',
+    status: ApiUtils.API_STATUS.ERROR,
     message: 'Something went very wrong!',
   });
 };
 
 export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
   err.statusCode = err.statusCode || 500;
-  err.status = err.status || 'error';
+  err.status = err.status || ApiUtils.API_STATUS.ERROR;
+
+  Logger.error('ERROR 💥', err);
+
   if (config.nodeEnv === 'production') {
     let error = { ...err };
     error.message = err.message;

@@ -8,6 +8,8 @@ import healthRoutes from '@/routes/health';
 import v1Routes from '@/routes/v1';
 import { Logger } from '@/utils/logger';
 import { globalErrorHandler } from '@/middleware/error.middleware';
+import swaggerUi from 'swagger-ui-express';
+import swaggerSpec from '@/config/swagger';
 
 const app: Express = express();
 
@@ -39,6 +41,7 @@ redisClient
 
 // Routes
 app.use('/health', healthRoutes);
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/v1', v1Routes);
 
 // Global error handler

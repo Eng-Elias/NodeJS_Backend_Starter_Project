@@ -9,7 +9,7 @@ import { catchAsync } from '@/utils/catchAsync';
 import config from '@/config';
 
 export const register = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password, firstName, lastName } = req.body;
+  const { username, email, password, firstName, lastName } = req.body;
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
@@ -17,6 +17,7 @@ export const register = catchAsync(async (req: Request, res: Response, next: Nex
   }
 
   const newUser = await User.create({
+    username,
     email,
     password,
     profile: { firstName, lastName },

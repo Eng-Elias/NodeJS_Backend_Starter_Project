@@ -33,3 +33,7 @@ build:
 # Open a shell inside the app container
 sh:
 	docker-compose exec app sh
+
+# Run tests
+test:
+	docker-compose run --rm app npm run test
