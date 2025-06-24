@@ -26,6 +26,11 @@ export interface IUser extends Document {
   profile: IUserProfile;
   preferences: IUserPreferences;
   roles: UserRole[];
+  isEmailVerified: boolean;
+  emailVerificationToken?: string;
+  emailVerificationTokenExpires?: Date;
+  passwordResetToken?: string;
+  passwordResetExpires?: Date;
   lastLogin?: Date;
   deleted?: boolean;
   deletedAt?: Date;

@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
 import { IUser, UserRole } from '@/types/user.types';
-import { CryptoUtils } from '@/utils/CryptoUtils';
+import { AuthUtils } from '@/utils/AuthUtils';
 import { auditPlugin } from './plugins/audit.plugin';
 
 const userSchema = new Schema<IUser>(
@@ -26,6 +26,26 @@ const userSchema = new Schema<IUser>(
       enum: Object.values(UserRole),
       default: [UserRole.USER],
     },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+    emailVerificationToken: {
+      type: String,
+      select: false,
+    },
+    emailVerificationTokenExpires: {
+      type: Date,
+      select: false,
+    },
+    passwordResetToken: {
+      type: String,
+      select: false,
+    },
+    passwordResetExpires: {
+      type: Date,
+      select: false,
+    },
     lastLogin: { type: Date },
   },
   { timestamps: true },
@@ -36,9 +56,9 @@ userSchema.plugin(auditPlugin);
 userSchema.plugin(mongooseDelete, { overrideMethods: 'all', deletedAt: true });
 
 // Hooks
-userSchema.pre('save', async function (next) {
+userSchema.pre<IUser>('save', async function (next) {
   if (this.isModified('password') && this.password) {
-    this.password = await CryptoUtils.hashPassword(this.password);
+    this.password = await AuthUtils.hashPassword(this.password);
   }
   next();
 });

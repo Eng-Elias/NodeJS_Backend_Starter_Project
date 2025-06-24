@@ -4,8 +4,9 @@ import { DatabaseUtils } from '@/utils/DatabaseUtils';
 import { createClient } from 'redis';
 import config from '@/config';
 import healthRoutes from '@/routes/health';
+import v1Routes from '@/routes/v1';
 import { Logger } from '@/utils/logger';
-import errorHandler from '@/middleware/errorHandler';
+import { globalErrorHandler } from '@/middleware/error.middleware';
 
 const app: Express = express();
 
@@ -25,9 +26,10 @@ redisClient
 
 // Routes
 app.use('/health', healthRoutes);
+app.use('/api/v1', v1Routes);
 
-// Error handling
-app.use(errorHandler);
+// Global error handler
+app.use(globalErrorHandler);
 
 // Start server
 const server = app.listen(config.port, () => {
