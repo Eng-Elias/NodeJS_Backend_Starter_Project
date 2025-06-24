@@ -1,6 +1,6 @@
 import express, { Express } from 'express';
 import cors from 'cors';
-import mongoose from 'mongoose';
+import { DatabaseUtils } from '@/utils/DatabaseUtils';
 import { createClient } from 'redis';
 import config from '@/config';
 import healthRoutes from '@/routes/health';
@@ -14,12 +14,9 @@ app.use(cors());
 app.use(express.json());
 
 // Database connections
-const redisClient = createClient({ url: config.redisUri });
+DatabaseUtils.connect();
 
-mongoose
-  .connect(config.mongoUri)
-  .then(() => Logger.info('MongoDB connected'))
-  .catch((err: any) => Logger.error('MongoDB connection error:', err));
+const redisClient = createClient({ url: config.redisUri });
 
 redisClient
   .connect()
@@ -46,7 +43,7 @@ const gracefulShutdown = (signal: string) => {
     });
 
     await Promise.all([
-      mongoose.disconnect().then(() => Logger.info('MongoDB disconnected')),
+      DatabaseUtils.disconnect().then(() => Logger.info('MongoDB disconnected')),
       redisClient.quit().then(() => Logger.info('Redis disconnected')),
     ]);
 

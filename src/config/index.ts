@@ -24,6 +24,10 @@ const config = {
   mongoUri: process.env.MONGO_URI as string,
   nodeEnv: process.env.NODE_ENV || 'development',
   redisUri: process.env.REDIS_URI as string,
+  jwt: {
+    secret: process.env.JWT_SECRET as string,
+    expiresIn: process.env.JWT_EXPIRES_IN as string,
+  },
 };
 
 export default config;

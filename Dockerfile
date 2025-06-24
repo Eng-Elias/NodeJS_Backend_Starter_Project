@@ -1,5 +1,5 @@
 # Stage 1: Base image with dependencies
-FROM node:18-alpine AS base
+FROM node:24-alpine AS base
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
