@@ -1,4 +1,4 @@
-import { app, redisClient } from '@/app';
+import { app, memoryLogInterval, redisClient } from '@/app';
 import config from '@/config';
 import { Logger } from '@/utils/logger';
 import { DatabaseUtils } from '@/utils/DatabaseUtils';
@@ -20,6 +20,8 @@ const gracefulShutdown = (signal: string) => {
       DatabaseUtils.disconnect().then(() => Logger.info('MongoDB disconnected')),
       redisClient.quit().then(() => Logger.info('Redis disconnected')),
     ]);
+
+    clearInterval(memoryLogInterval);
 
     process.exit(0);
   });

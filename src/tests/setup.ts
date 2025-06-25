@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 import { DatabaseUtils } from '@/utils/DatabaseUtils';
-import { redisClient } from '../app';
+import { redisClient, memoryLogInterval } from '../app';
 
 beforeAll(async () => {
   // Use a separate test database
@@ -19,6 +19,7 @@ afterEach(async () => {
 afterAll(async () => {
   // Drop the test database and disconnect
   await mongoose.connection.dropDatabase();
-    await mongoose.connection.close();
+  await mongoose.connection.close();
   await redisClient.quit();
+  clearInterval(memoryLogInterval);
 });

@@ -62,7 +62,7 @@ redisClient
   .catch((err: any) => Logger.error('Redis connection error:', err));
 
 // Performance Monitoring
-setInterval(() => {
+export const memoryLogInterval = setInterval(() => {
   PerformanceUtils.logMemoryUsage();
 }, 300000); // Every 5 minutes
 Logger.info('Memory usage logging enabled.');
@@ -112,3 +112,5 @@ app.use(errorConverter);
 app.use(globalErrorHandler);
 
 export { app };
+
+
