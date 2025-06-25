@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import crypto from 'crypto';
 import config from '@/config';
-import { CustomJwtPayload } from '@/types/express';
+import { CustomJwtPayload } from '@/types/user.types';
 
 /**
  * Utility class for authentication-related operations.

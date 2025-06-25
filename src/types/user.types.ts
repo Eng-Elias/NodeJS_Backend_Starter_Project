@@ -1,4 +1,5 @@
-import { Document } from 'mongoose';
+import { Document, ObjectId } from 'mongoose';
+import { JwtPayload } from 'jsonwebtoken';
 
 export enum UserRole {
   ADMIN = 'admin',
@@ -20,6 +21,7 @@ export interface IUserPreferences {
 }
 
 export interface IUser extends Document {
+  _id: ObjectId | string;
   username: string;
   email: string;
   password?: string;
@@ -35,4 +37,11 @@ export interface IUser extends Document {
   lastLogin?: Date;
   deleted?: boolean;
   deletedAt?: Date;
+}
+
+/**
+ * Extends the default JWT payload with a custom 'id' field.
+ */
+export interface CustomJwtPayload extends JwtPayload {
+  id: string;
 }

@@ -3,7 +3,7 @@ import { User } from '@/models/user.model';
 import { AuthUtils } from '@/utils/AuthUtils';
 import { AppError } from '@/utils/AppError';
 import { catchAsync } from '@/utils/catchAsync';
-import { CustomJwtPayload } from '@/types/express';
+import { CustomJwtPayload } from '@/types/user.types';
 
 export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   let token;

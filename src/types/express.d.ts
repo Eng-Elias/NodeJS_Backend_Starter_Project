@@ -1,12 +1,4 @@
-import { JwtPayload } from 'jsonwebtoken';
 import { IUser } from '@/models/user.model';
-
-/**
- * Extends the default JWT payload with a custom 'id' field.
- */
-export interface CustomJwtPayload extends JwtPayload {
-  id: string;
-}
 
 declare global {
   namespace Express {
