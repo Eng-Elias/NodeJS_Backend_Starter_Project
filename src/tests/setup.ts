@@ -1,10 +1,9 @@
 import mongoose from 'mongoose';
-import config from '@/config';
+import { DatabaseUtils } from '@/utils/DatabaseUtils';
 
 beforeAll(async () => {
   // Use a separate test database
-  const mongoUri = `${config.mongoUri}-test`;
-  await mongoose.connect(mongoUri);
+  await DatabaseUtils.connect();
 });
 
 afterEach(async () => {

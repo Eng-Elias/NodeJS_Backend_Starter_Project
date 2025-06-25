@@ -13,7 +13,7 @@ export const register = catchAsync(async (req: Request, res: Response, next: Nex
 
   const existingUser = await User.findOne({ email });
   if (existingUser) {
-    return next(new AppError('An account with this email already exists.', 400));
+    return next(new AppError({ message: 'An account with this email already exists.', statusCode: 400 }));
   }
 
   const newUser = await User.create({
@@ -46,7 +46,7 @@ export const register = catchAsync(async (req: Request, res: Response, next: Nex
       newUser.emailVerificationToken = undefined;
       newUser.emailVerificationTokenExpires = undefined;
       await newUser.save({ validateBeforeSave: false });
-      return next(new AppError('There was an error sending the verification email. Please try again later.', 500));
+      return next(new AppError({ message: 'There was an error sending the verification email. Please try again later.', statusCode: 500 }));
     }
   } else {
     const accessToken = AuthUtils.generateAccessToken({ id: newUser._id });
@@ -70,17 +70,17 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new AppError('Please provide email and password!', 400));
+    return next(new AppError({ message: 'Please provide email and password!', statusCode: 400 }));
   }
 
   const user = await User.findOne({ email }).select('+password +refreshTokens');
 
   if (!user || !user.password || !(await AuthUtils.comparePassword(password, user.password))) {
-    return next(new AppError('Incorrect email or password', 401));
+    return next(new AppError({ message: 'Incorrect email or password', statusCode: 401 }));
   }
 
   if (config.email.verificationEnabled && !user.isEmailVerified) {
-    return next(new AppError('Please verify your email address before logging in.', 401));
+    return next(new AppError({ message: 'Please verify your email address before logging in.', statusCode: 401 }));
   }
 
   const accessToken = AuthUtils.generateAccessToken({ id: user._id });
@@ -108,7 +108,7 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response, next: 
   }).select('+refreshTokens');
 
   if (!user) {
-    return next(new AppError('Token is invalid or has expired.', 400));
+    return next(new AppError({ message: 'Token is invalid or has expired.', statusCode: 400 }));
   }
 
   user.isEmailVerified = true;
@@ -134,17 +134,17 @@ export const verifyEmail = catchAsync(async (req: Request, res: Response, next: 
 export const refresh = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { refreshToken } = req.body;
   if (!refreshToken) {
-    return next(new AppError('Refresh token is required', 401));
+    return next(new AppError({ message: 'Refresh token is required', statusCode: 401 }));
   }
 
   const decoded = AuthUtils.verifyRefreshToken(refreshToken);
   if (!decoded || typeof decoded !== 'object' || !('id' in decoded) || typeof decoded.id !== 'string') {
-    return next(new AppError('Invalid refresh token', 401));
+    return next(new AppError({ message: 'Invalid refresh token', statusCode: 401 }));
   }
 
   const user = await User.findById(decoded.id).select('+refreshTokens');
   if (!user || !user.refreshTokens?.includes(refreshToken)) {
-    return next(new AppError('Invalid refresh token', 401));
+    return next(new AppError({ message: 'Invalid refresh token', statusCode: 401 }));
   }
 
   const accessToken = AuthUtils.generateAccessToken({ id: user._id });
@@ -158,17 +158,20 @@ export const refresh = catchAsync(async (req: Request, res: Response, next: Next
 export const logout = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { refreshToken } = req.body;
   if (!refreshToken) {
-    return next(new AppError('Refresh token is required', 401));
+    return next(new AppError({ message: 'Refresh token is required', statusCode: 401 }));
   }
 
   const decoded = AuthUtils.verifyRefreshToken(refreshToken);
   if (!decoded || typeof decoded !== 'object' || !('id' in decoded) || typeof decoded.id !== 'string') {
-    res.status(200).json({ status: ApiUtils.API_STATUS.SUCCESS, message: 'Logged out' });
-    return;
+    return next(new AppError({ message: 'Invalid refresh token', statusCode: 401 }));
   }
 
   const user = await User.findById(decoded.id).select('+refreshTokens');
-  if (user && user.refreshTokens) {
+  if (!user) {
+    return next(new AppError({ message: 'Invalid refresh token', statusCode: 401 }));
+  }
+
+  if (user.refreshTokens) {
     user.refreshTokens = user.refreshTokens.filter((rt) => rt !== refreshToken);
     await user.save();
   }
@@ -181,11 +184,11 @@ export const resendVerificationEmail = catchAsync(async (req: Request, res: Resp
   const user = await User.findOne({ email });
 
   if (!user) {
-    return next(new AppError('No user found with that email address.', 404));
+    return next(new AppError({ message: 'No user found with that email address.', statusCode: 404 }));
   }
 
   if (user.isEmailVerified) {
-    return next(new AppError('This email is already verified.', 400));
+    return next(new AppError({ message: 'This email is already verified.', statusCode: 400 }));
   }
 
   const { token: verificationToken, hashedToken } = AuthUtils.generateVerificationToken();
@@ -207,7 +210,7 @@ export const resendVerificationEmail = catchAsync(async (req: Request, res: Resp
     user.emailVerificationToken = undefined;
     user.emailVerificationTokenExpires = undefined;
     await user.save();
-    return next(new AppError('There was an error sending the verification email. Please try again later.', 500));
+    return next(new AppError({ message: 'There was an error sending the verification email. Please try again later.', statusCode: 500 }));
   }
 });
 
@@ -216,7 +219,7 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response, nex
   const user = await User.findOne({ email });
 
   if (!user) {
-    return next(new AppError('No user found with that email address.', 404));
+    return next(new AppError({ message: 'No user found with that email address.', statusCode: 404 }));
   }
 
   const { token: resetToken, hashedToken } = AuthUtils.generateVerificationToken();
@@ -238,7 +241,7 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response, nex
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
     await user.save();
-    return next(new AppError('There was an error sending the password reset email. Please try again later.', 500));
+    return next(new AppError({ message: 'There was an error sending the password reset email. Please try again later.', statusCode: 500 }));
   }
 });
 
@@ -251,7 +254,7 @@ export const resetPassword = catchAsync(async (req: Request, res: Response, next
   }).select('+refreshTokens');
 
   if (!user) {
-    return next(new AppError('Token is invalid or has expired.', 400));
+    return next(new AppError({ message: 'Token is invalid or has expired.', statusCode: 400 }));
   }
 
   user.password = req.body.password;

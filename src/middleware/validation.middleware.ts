@@ -11,7 +11,7 @@ export const validateRequest = (schema: Schema) => {
 
     if (error) {
       const errorMessage = error.details.map((detail) => detail.message).join(', ');
-      return next(new AppError(errorMessage, 400));
+      return next(new AppError({ message: errorMessage, statusCode: 400 }));
     }
 
     req.body = value;

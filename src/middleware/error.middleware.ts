@@ -4,14 +4,13 @@ import { AppError } from '@/utils/AppError';
 import { Logger } from '@/utils/logger';
 import { ApiUtils } from '@/utils/ApiUtils';
 
-
 export const AUTH_ERRORS = {
   JsonWebTokenError: 'JsonWebTokenError',
   TokenExpiredError: 'TokenExpiredError',
-}
+};
 
-const handleJWTError = () => new AppError('Invalid token. Please log in again!', 401);
-const handleJWTExpiredError = () => new AppError('Your token has expired! Please log in again.', 401);
+const handleJWTError = () => new AppError({ message: 'Invalid token. Please log in again!', statusCode: 401 });
+const handleJWTExpiredError = () => new AppError({ message: 'Your token has expired! Please log in again.', statusCode: 401 });
 
 const sendErrorProd = (err: AppError, res: Response) => {
   if (err.isOperational) {
@@ -28,7 +27,17 @@ const sendErrorProd = (err: AppError, res: Response) => {
   });
 };
 
-export const globalErrorHandler = (err: any, req: Request, res: Response, next: NextFunction) => {
+export const errorConverter = (err: any, req: Request, res: Response, next: NextFunction) => {
+  let error = err;
+  if (!(error instanceof AppError)) {
+    const statusCode = error.statusCode || 500;
+    const message = error.message || 'Something went wrong';
+    error = new AppError({ message, statusCode, isOperational: false, stack: err.stack });
+  }
+  next(error);
+};
+
+export const globalErrorHandler = (err: AppError, req: Request, res: Response, next: NextFunction) => {
   err.statusCode = err.statusCode || 500;
   err.status = err.status || ApiUtils.API_STATUS.ERROR;
 

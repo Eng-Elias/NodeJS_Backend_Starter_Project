@@ -12,14 +12,14 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
   }
 
   if (!token) {
-    return next(new AppError('You are not logged in! Please log in to get access.', 401));
+    return next(new AppError({ message: 'You are not logged in! Please log in to get access.', statusCode: 401 }));
   }
 
   const decoded = AuthUtils.verifyAccessToken(token);
 
   const currentUser = await User.findById((decoded as CustomJwtPayload)?.id);
   if (!currentUser) {
-    return next(new AppError('The user belonging to this token no longer exists.', 401));
+    return next(new AppError({ message: 'The user belonging to this token no longer exists.', statusCode: 401 }));
   }
 
   req.user = currentUser;

@@ -34,6 +34,7 @@ build:
 sh:
 	docker-compose exec app sh
 
-# Run tests
+# Run tests and clean up the test database
 test:
-	docker-compose run --rm app npm run test
+	@echo "Running tests with isolated database..."
+	docker-compose run --rm -e MONGO_URI=mongodb://mongo:27017/mydatabase-test app npm run test
