@@ -23,7 +23,9 @@ interface IConfig {
   port: number;
   mongoUri: string;
   nodeEnv: string;
-  redisUri: string;
+  redis: {
+    uri: string;
+  };
   corsOrigin: string;
   jwt: {
     secret: string;
@@ -46,7 +48,9 @@ const config: IConfig = {
   port: Number(process.env.PORT) || 3000,
   mongoUri: process.env.MONGO_URI as string,
   nodeEnv: process.env.NODE_ENV || 'development',
-  redisUri: process.env.REDIS_URI as string,
+  redis: {
+    uri: process.env.REDIS_URI as string,
+  },
   corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3001',
   jwt: {
     secret: process.env.JWT_SECRET || 'your-super-secret-key',

@@ -4,11 +4,14 @@ import config from '@/config';
 import { Logger } from '@/utils/logger';
 import { DatabaseUtils } from '@/utils/DatabaseUtils';
 import { SocketUtils } from '@/utils/SocketUtils';
+import { SchedulerUtils } from '@/utils/SchedulerUtils';
+import { QueueUtils } from '@/utils/QueueUtils';
 
 // Start server
 const server: http.Server = app.listen(config.port, () => {
   Logger.info(`Server is running on port ${config.port}`);
   SocketUtils.initialize(server);
+  SchedulerUtils.startAllWorkers();
 });
 
 // Graceful shutdown
@@ -22,6 +25,7 @@ const gracefulShutdown = (signal: string) => {
     await Promise.all([
       DatabaseUtils.disconnect().then(() => Logger.info('MongoDB disconnected')),
       redisClient.quit().then(() => Logger.info('Redis disconnected')),
+      QueueUtils.closeAll().then(() => Logger.info('All Bull queues closed.')),
     ]);
 
     clearInterval(memoryLogInterval);

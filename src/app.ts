@@ -54,7 +54,7 @@ app.use(
 // Database connections
 DatabaseUtils.connect();
 
-export const redisClient = createClient({ url: config.redisUri });
+export const redisClient = createClient({ url: config.redis.uri });
 
 redisClient
   .connect()
