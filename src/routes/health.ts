@@ -4,7 +4,7 @@ const router = Router();
 
 /**
  * @swagger
- * /health:
+ * /:
  *   get:
  *     summary: Health check
  *     description: Returns the health status of the service.
