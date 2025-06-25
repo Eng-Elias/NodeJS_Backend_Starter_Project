@@ -41,12 +41,12 @@ sh:
 # Run tests and clean up the test database
 test:
 	@echo "Running tests with isolated database..."
-	docker-compose run --rm -e MONGO_URI=mongodb://mongo:27017/mydatabase-test app npm run test
+	docker-compose run --build --rm -e MONGO_URI=mongodb://mongo:27017/mydatabase-test app npm run test
 
 # Run migrations
 migrate:
-	docker-compose run --rm app npm run migrate
+	docker-compose run --build --rm app npm run migrate
 
 # Run DB seed
 seed:
-	docker-compose run --rm app npm run seed
+	docker-compose run --build --rm app npm run seed

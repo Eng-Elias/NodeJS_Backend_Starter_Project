@@ -11,7 +11,9 @@ import swaggerUi from 'swagger-ui-express';
 import { healthSwaggerSpec, apiV1SwaggerSpec } from '@/config/swagger';
 import { addSwaggerPathPrefix } from '@/utils/swagger';
 import compression from 'compression';
-import { customTimeout } from '@/middleware/timeout.middleware';
+import { customTimeout } from './middleware/timeout.middleware';
+import { xssMiddleware } from './middleware/xss.middleware';
+import { mongoSanitizeMiddleware } from './middleware/db_injection_sanitize.middleware';
 import { DatabaseUtils } from './utils/DatabaseUtils';
 import { PerformanceUtils } from '@/utils/PerformanceUtils';
 
@@ -25,7 +27,14 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(compression());
+
+// XSS escape middleware
+app.use(xssMiddleware);
+
+// MongoDB injection sanitize middleware
+app.use(mongoSanitizeMiddleware);
 
 // Set request timeout
 app.use(customTimeout(30000)); // 30 seconds
