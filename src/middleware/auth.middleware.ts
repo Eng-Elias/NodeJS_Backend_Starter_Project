@@ -3,7 +3,7 @@ import { User } from '@/models/user.model';
 import { AuthUtils } from '@/utils/AuthUtils';
 import { AppError } from '@/utils/AppError';
 import { catchAsync } from '@/utils/catchAsync';
-import { CustomJwtPayload } from '@/types/auth.types';
+import { CustomJwtPayload } from '@/types/express';
 
 export const protect = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   let token;
@@ -15,9 +15,9 @@ export const protect = catchAsync(async (req: Request, res: Response, next: Next
     return next(new AppError({ message: 'You are not logged in! Please log in to get access.', statusCode: 401 }));
   }
 
-  const decoded = AuthUtils.verifyAccessToken(token);
+  const decoded = AuthUtils.verifyAccessToken(token) as CustomJwtPayload;
 
-  const currentUser = await User.findById((decoded as CustomJwtPayload)?.id);
+  const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
     return next(new AppError({ message: 'The user belonging to this token no longer exists.', statusCode: 401 }));
   }

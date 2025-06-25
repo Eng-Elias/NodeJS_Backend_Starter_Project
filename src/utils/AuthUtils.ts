@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import crypto from 'crypto';
 import config from '@/config';
-import { CustomJwtPayload } from '@/types/auth.types';
+import { CustomJwtPayload } from '@/types/express';
 
 /**
  * Utility class for authentication-related operations.
@@ -35,8 +35,7 @@ export class AuthUtils {
    * @returns An access token.
    */
   public static generateAccessToken(payload: object): string {
-    // @ts-ignore
-    return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expiresIn });
+    return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expiresIn } as SignOptions);
   }
 
   /**
@@ -45,8 +44,7 @@ export class AuthUtils {
    * @returns A refresh token.
    */
   public static generateRefreshToken(payload: object): string {
-    // @ts-ignore
-    return jwt.sign(payload, config.jwt.refreshSecret, { expiresIn: config.jwt.refreshExpiresIn });
+    return jwt.sign(payload, config.jwt.refreshSecret, { expiresIn: config.jwt.refreshExpiresIn } as SignOptions);
   }
 
   /**
@@ -55,10 +53,10 @@ export class AuthUtils {
    * @param isRefreshToken - Whether the token is a refresh token.
    * @returns The decoded payload if the token is valid, otherwise null.
    */
-  public static verifyToken(token: string, isRefreshToken = false): CustomJwtPayload | string | null {
+  public static verifyToken(token: string, isRefreshToken = false): CustomJwtPayload | null {
     try {
       const secret = isRefreshToken ? config.jwt.refreshSecret : config.jwt.secret;
-      return jwt.verify(token, secret);
+      return jwt.verify(token, secret) as CustomJwtPayload;
     } catch (error) {
       return null;
     }
@@ -69,7 +67,7 @@ export class AuthUtils {
    * @param token - The access token to verify.
    * @returns The decoded payload if the token is valid, otherwise null.
    */
-  public static verifyAccessToken(token: string): CustomJwtPayload | string | null {
+  public static verifyAccessToken(token: string): CustomJwtPayload | null {
     return this.verifyToken(token, false);
   }
 
@@ -78,7 +76,7 @@ export class AuthUtils {
    * @param token - The refresh token to verify.
    * @returns The decoded payload if the token is valid, otherwise null.
    */
-  public static verifyRefreshToken(token: string): CustomJwtPayload | string | null {
+  public static verifyRefreshToken(token: string): CustomJwtPayload | null {
     return this.verifyToken(token, true);
   }
 

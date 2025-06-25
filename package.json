@@ -21,6 +21,7 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "compression": "^1.8.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@types/bcryptjs": "^3.0.0",
+    "@types/compression": "^1.8.1",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/express-requests-logger": "^4.0.0",
@@ -53,6 +55,7 @@
     "@typescript-eslint/parser": "^8.35.0",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
+    "eslint-import-resolver-typescript": "^4.4.3",
     "eslint-plugin-prettier": "^5.5.0",
     "jest": "^30.0.2",
     "mongodb-memory-server": "^10.1.4",

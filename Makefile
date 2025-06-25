@@ -1,6 +1,10 @@
 # Makefile for managing the project
 
-.PHONY: up down logs install lint lint-fix build sh
+.PHONY: dev up down logs install lint lint-fix build sh
+
+# Start the docker containers in development mode
+dev:
+	docker-compose up --build
 
 # Start the docker containers in detached mode
 up:
@@ -38,3 +42,11 @@ sh:
 test:
 	@echo "Running tests with isolated database..."
 	docker-compose run --rm -e MONGO_URI=mongodb://mongo:27017/mydatabase-test app npm run test
+
+# Run migrations
+migrate:
+	docker-compose run --rm app npm run migrate
+
+# Run DB seed
+seed:
+	docker-compose run --rm app npm run seed

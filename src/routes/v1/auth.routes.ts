@@ -35,11 +35,14 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
+ *               - username
  *               - email
  *               - password
  *               - firstName
  *               - lastName
  *             properties:
+ *               username:
+ *                 type: string
  *               email:
  *                 type: string
  *                 format: email

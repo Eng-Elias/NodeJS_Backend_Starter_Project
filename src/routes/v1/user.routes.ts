@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { cache } from '@/middleware/cache.middleware';
 import { getAllUsers } from '@/controllers/user.controller';
 import { protect } from '@/middleware/auth.middleware';
 import { restrictTo } from '@/middleware/rbac.middleware';
@@ -77,6 +78,6 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.route('/').get(protect, restrictTo(UserRole.ADMIN), getAllUsers);
+router.route('/').get(protect, restrictTo(UserRole.ADMIN), cache(600), getAllUsers);
 
 export default router;

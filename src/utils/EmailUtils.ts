@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import config from '@/config';
 import { Logger } from './logger';
+import { TemplateUtils } from './TemplateUtils';
 
 /**
  * Utility class for sending emails.
@@ -57,5 +58,45 @@ export class EmailUtils {
     } catch (error: any) {
       Logger.error('Error sending email:', error.message);
     }
+  }
+
+  /**
+   * Sends a verification email to a new user.
+   *
+   * @param to - The recipient's email address.
+   * @param verificationLink - The email verification link.
+   */
+  public static async sendVerificationEmail(to: string, verificationLink: string): Promise<void> {
+    const subject = 'Verify Your Email Address';
+    const htmlContent = TemplateUtils.renderTemplate('emailVerification', { verificationLink });
+
+    if (!htmlContent) {
+      Logger.error('Could not render email verification template.');
+      return;
+    }
+
+    const textContent = `Welcome! Please verify your email by clicking this link: ${verificationLink}`;
+
+    await this.sendEmail(to, subject, textContent, htmlContent);
+  }
+
+  /**
+   * Sends a password reset email to a user.
+   *
+   * @param to - The recipient's email address.
+   * @param resetLink - The password reset link.
+   */
+  public static async sendPasswordResetEmail(to: string, resetLink: string): Promise<void> {
+    const subject = 'Password Reset Request';
+    const htmlContent = TemplateUtils.renderTemplate('passwordReset', { resetLink });
+
+    if (!htmlContent) {
+      Logger.error('Could not render password reset template.');
+      return;
+    }
+
+    const textContent = `You requested a password reset. Please click this link to reset your password: ${resetLink}`;
+
+    await this.sendEmail(to, subject, textContent, htmlContent);
   }
 }

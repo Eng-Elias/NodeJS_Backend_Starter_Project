@@ -10,13 +10,25 @@ import { globalErrorHandler, errorConverter } from '@/middleware/error.middlewar
 import swaggerUi from 'swagger-ui-express';
 import { healthSwaggerSpec, apiV1SwaggerSpec } from '@/config/swagger';
 import { addSwaggerPathPrefix } from '@/utils/swagger';
+import compression from 'compression';
+import { customTimeout } from '@/middleware/timeout.middleware';
 import { DatabaseUtils } from './utils/DatabaseUtils';
+import { PerformanceUtils } from '@/utils/PerformanceUtils';
 
 const app: Express = express();
 
 // Middleware
-app.use(cors());
+// Configure CORS
+const corsOptions = {
+  origin: config.corsOrigin,
+  optionsSuccessStatus: 200, // For legacy browser support
+};
+app.use(cors(corsOptions));
 app.use(express.json());
+app.use(compression());
+
+// Set request timeout
+app.use(customTimeout(30000)); // 30 seconds
 app.use(
   audit({
     logger: Logger.logger,
@@ -39,6 +51,12 @@ redisClient
   .connect()
   .then(() => Logger.info('Redis connected'))
   .catch((err: any) => Logger.error('Redis connection error:', err));
+
+// Performance Monitoring
+setInterval(() => {
+  PerformanceUtils.logMemoryUsage();
+}, 300000); // Every 5 minutes
+Logger.info('Memory usage logging enabled.');
 
 // Routes
 app.use('/health', healthRoutes);

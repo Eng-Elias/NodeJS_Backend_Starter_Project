@@ -7,6 +7,8 @@ import { EmailUtils } from '@/utils/EmailUtils';
 import { AppError } from '@/utils/AppError';
 import { catchAsync } from '@/utils/catchAsync';
 import config from '@/config';
+import { CacheUtils } from '@/utils/CacheUtils';
+import { CACHE_PATTERNS } from '@/utils/CacheUtils';
 
 export const register = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const { username, email, password, firstName, lastName } = req.body;
@@ -31,12 +33,9 @@ export const register = catchAsync(async (req: Request, res: Response, next: Nex
 
     try {
       const verificationUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/verify-email/${verificationToken}`;
-      await EmailUtils.sendEmail(
-        newUser.email,
-        'Verify your email address',
-        `Please click the following link to verify your email address: ${verificationUrl}`,
-        `<p>Please click the following link to verify your email address: <a href="${verificationUrl}">${verificationUrl}</a></p>`
-      );
+      await EmailUtils.sendVerificationEmail(newUser.email, verificationUrl);
+
+      await CacheUtils.delByPattern(CACHE_PATTERNS.USERS);
 
       res.status(201).json({
         status: ApiUtils.API_STATUS.SUCCESS,
@@ -56,6 +55,8 @@ export const register = catchAsync(async (req: Request, res: Response, next: Nex
 
     // Remove password from response
     newUser.password = undefined;
+
+    await CacheUtils.delByPattern(CACHE_PATTERNS.USERS);
 
     res.status(201).json({
       status: ApiUtils.API_STATUS.SUCCESS,
@@ -198,12 +199,7 @@ export const resendVerificationEmail = catchAsync(async (req: Request, res: Resp
 
   try {
     const verificationUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/verify-email/${verificationToken}`;
-    await EmailUtils.sendEmail(
-      user.email,
-      'Verify your email address (Resend)',
-      `Please click the following link to verify your email address: ${verificationUrl}`,
-      `<p>Please click the following link to verify your email address: <a href="${verificationUrl}">${verificationUrl}</a></p>`
-    );
+    await EmailUtils.sendVerificationEmail(user.email, verificationUrl);
 
     res.status(200).json({ status: ApiUtils.API_STATUS.SUCCESS, message: 'Verification email sent.' });
   } catch (error) {
@@ -229,12 +225,7 @@ export const forgotPassword = catchAsync(async (req: Request, res: Response, nex
 
   try {
     const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/auth/reset-password/${resetToken}`;
-    await EmailUtils.sendEmail(
-      user.email,
-      'Your password reset token (valid for 10 minutes)',
-      `To reset your password, please click the following link: ${resetUrl}`,
-      `<p>To reset your password, please click the following link: <a href="${resetUrl}">${resetUrl}</a></p>`
-    );
+    await EmailUtils.sendPasswordResetEmail(user.email, resetUrl);
 
     res.status(200).json({ status: ApiUtils.API_STATUS.SUCCESS, message: 'Password reset token sent to email.' });
   } catch (error) {

@@ -19,11 +19,35 @@ const validateEnvVars = () => {
 
 validateEnvVars();
 
-const config = {
-  port: process.env.PORT || 3000,
+interface IConfig {
+  port: number;
+  mongoUri: string;
+  nodeEnv: string;
+  redisUri: string;
+  corsOrigin: string;
+  jwt: {
+    secret: string;
+    expiresIn: string;
+    refreshSecret: string;
+    refreshExpiresIn: string;
+  };
+  email: {
+    host?: string;
+    port?: number;
+    user?: string;
+    pass?: string;
+    fromName: string;
+    fromEmail: string;
+    verificationEnabled: boolean;
+  };
+}
+
+const config: IConfig = {
+  port: Number(process.env.PORT) || 3000,
   mongoUri: process.env.MONGO_URI as string,
   nodeEnv: process.env.NODE_ENV || 'development',
   redisUri: process.env.REDIS_URI as string,
+  corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:3001',
   jwt: {
     secret: process.env.JWT_SECRET || 'your-super-secret-key',
     expiresIn: process.env.JWT_EXPIRES_IN || '15m',
