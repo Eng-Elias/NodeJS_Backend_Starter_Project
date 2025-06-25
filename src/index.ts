@@ -1,11 +1,14 @@
+import http from 'http';
 import { app, memoryLogInterval, redisClient } from '@/app';
 import config from '@/config';
 import { Logger } from '@/utils/logger';
 import { DatabaseUtils } from '@/utils/DatabaseUtils';
+import { SocketUtils } from '@/utils/SocketUtils';
 
 // Start server
-const server = app.listen(config.port, () => {
+const server: http.Server = app.listen(config.port, () => {
   Logger.info(`Server is running on port ${config.port}`);
+  SocketUtils.initialize(server);
 });
 
 // Graceful shutdown

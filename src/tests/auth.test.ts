@@ -1,6 +1,5 @@
 import request from 'supertest';
 import { app } from '@/app';
-import v1Routes from '@/routes/v1';
 import { User } from '@/models/user.model';
 import { ApiUtils } from '@/utils/ApiUtils';
 

@@ -74,7 +74,7 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
     return next(new AppError({ message: 'Please provide email and password!', statusCode: 400 }));
   }
 
-  const user = await User.findOne({ email }).select('+password +refreshTokens');
+  const user = await User.findOne({ email }).select('+password');
 
   if (!user || !user.password || !(await AuthUtils.comparePassword(password, user.password))) {
     return next(new AppError({ message: 'Incorrect email or password', statusCode: 401 }));
@@ -87,16 +87,17 @@ export const login = catchAsync(async (req: Request, res: Response, next: NextFu
   const accessToken = AuthUtils.generateAccessToken({ id: user._id });
   const refreshToken = AuthUtils.generateRefreshToken({ id: user._id });
 
-  user.refreshTokens = [...(user.refreshTokens || []), refreshToken];
-  await user.save();
-
-  user.password = undefined;
+  const updatedUser = await User.findByIdAndUpdate(
+    user._id,
+    { $push: { refreshTokens: refreshToken } },
+    { new: true }
+  );
 
   res.status(200).json({
     status: ApiUtils.API_STATUS.SUCCESS,
     accessToken,
     refreshToken,
-    data: { user },
+    data: { user: updatedUser },
   });
 });
 
