@@ -43,6 +43,10 @@ test:
 	@echo "Running tests with isolated database..."
 	docker-compose run --build --rm -e MONGO_URI=mongodb://mongo:27017/mydatabase-test app npm run test
 
+# run specific test, e.g. make run-test file=graphql
+run-test:
+	@docker-compose run --rm -e MONGO_URI=mongodb://mongo:27017/mydatabase-test app npm test -- src/tests/$(file).test.ts
+
 # Run migrations
 migrate:
 	docker-compose run --build --rm app npm run migrate
