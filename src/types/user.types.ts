@@ -1,4 +1,5 @@
-import { Document, ObjectId } from 'mongoose';
+import { ObjectId } from 'mongoose';
+import { SoftDeleteDocument } from 'mongoose-delete';
 import { JwtPayload } from 'jsonwebtoken';
 
 export enum UserRole {
@@ -20,7 +21,7 @@ export interface IUserPreferences {
   };
 }
 
-export interface IUser extends Document {
+export interface IUser extends SoftDeleteDocument {
   _id: ObjectId | string;
   username: string;
   email: string;
@@ -35,8 +36,7 @@ export interface IUser extends Document {
   passwordResetExpires?: Date;
   refreshTokens?: string[];
   lastLogin?: Date;
-  deleted?: boolean;
-  deletedAt?: Date;
+
 }
 
 /**
