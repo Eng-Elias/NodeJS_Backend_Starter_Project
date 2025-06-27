@@ -1,6 +1,6 @@
 {
   "name": "nodejs-backend-starter-project",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A TypeScript Node.js backend project with Express and MongoDB.",
   "main": "dist/index.js",
   "scripts": {
