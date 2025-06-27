@@ -1,26 +1,69 @@
 # Dependencies
 /node_modules
+/.pnp
+.pnp.js
 
 # Production
 /dist
+/build
 
 # Environment variables
 .env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
 
 # Logs
 logs
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
 
 # IDEs and editors
-.vscode
-.idea
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+.idea/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
-# Coverage
-coverage
+# TypeScript
+*.tsbuildinfo
+.npm
+
+# Testing
+/coverage
+/.nyc_output
+
+# Temporary files
+.DS_Store
+Thumbs.db
+.cache
+.temp
+.tmp
+
+# Generated files
+/dist-ssr
+*.local
+
+# Yarn v2
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*

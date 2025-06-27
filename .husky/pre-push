@@ -1,0 +1,13 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Comment: This hook runs before pushing changes
+# It will run build verification and security audit
+# To bypass in emergency: git push --no-verify
+
+echo "🔍 Running pre-push checks..."
+npm run build || { echo "❌ Build failed. Please fix the errors before pushing."; exit 1; }
+echo "✅ Build successful!"
+
+echo "🔍 Running security audit..."
+npm audit --production || { echo "⚠️ Security vulnerabilities found. Review them before pushing."; }

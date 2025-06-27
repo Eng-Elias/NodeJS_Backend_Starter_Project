@@ -1,0 +1,9 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Comment: This hook runs before committing changes
+# It will run lint-staged to check and fix code issues on staged files only
+# To bypass in emergency: git commit --no-verify
+
+echo "🔍 Running pre-commit checks..."
+npx lint-staged
