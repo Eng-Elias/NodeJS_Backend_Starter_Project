@@ -1,5 +1,4 @@
 export class DbInjectionSanitizeUtils {
-
   /**
    * Recursively sanitizes an object to prevent NoSQL injection.
    * It removes keys that start with '$' or contain '.'.
@@ -12,7 +11,9 @@ export class DbInjectionSanitizeUtils {
     }
 
     if (Array.isArray(value)) {
-      return value.map(item => DbInjectionSanitizeUtils.mongoSanitize(item)) as T;
+      return value.map((item) =>
+        DbInjectionSanitizeUtils.mongoSanitize(item),
+      ) as T;
     }
 
     const sanitizedObject: { [key: string]: any } = {};
@@ -22,7 +23,9 @@ export class DbInjectionSanitizeUtils {
           // Skip potentially malicious keys
           continue;
         }
-        sanitizedObject[key] = DbInjectionSanitizeUtils.mongoSanitize((value as any)[key]);
+        sanitizedObject[key] = DbInjectionSanitizeUtils.mongoSanitize(
+          (value as any)[key],
+        );
       }
     }
 

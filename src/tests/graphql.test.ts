@@ -1,4 +1,9 @@
-import { ApolloClient, InMemoryCache, gql, createHttpLink } from '@apollo/client';
+import {
+  ApolloClient,
+  InMemoryCache,
+  gql,
+  createHttpLink,
+} from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 import fetch from 'cross-fetch';
 import { User } from '@/models/user.model';
@@ -98,7 +103,7 @@ describe('GraphQL API', () => {
         resolve();
       });
     });
-    
+
     // Set up the GraphQL server
     await setupGraphQLServer(app, server);
 
@@ -164,8 +169,12 @@ describe('GraphQL API', () => {
       expect(data.register.refreshToken).toBeDefined();
       expect(data.register.user.email).toBe(testUser.email);
       expect(data.register.user.username).toBe(testUser.username);
-      expect(data.register.user.profile.firstName).toBe(testUser.profile.firstName);
-      expect(data.register.user.profile.lastName).toBe(testUser.profile.lastName);
+      expect(data.register.user.profile.firstName).toBe(
+        testUser.profile.firstName,
+      );
+      expect(data.register.user.profile.lastName).toBe(
+        testUser.profile.lastName,
+      );
 
       // Save the token for subsequent tests
       authToken = data.register.accessToken;
@@ -190,7 +199,9 @@ describe('GraphQL API', () => {
         });
         fail('Should have thrown an error');
       } catch (error: any) {
-        expect(error.graphQLErrors[0].message).toContain('An account with this email already exists');
+        expect(error.graphQLErrors[0].message).toContain(
+          'An account with this email already exists',
+        );
         expect(error.graphQLErrors[0].extensions.code).toBe('BAD_USER_INPUT');
       }
     });
@@ -241,7 +252,9 @@ describe('GraphQL API', () => {
         });
         fail('Should have thrown an error');
       } catch (error: any) {
-        expect(error.graphQLErrors[0].message).toContain('Incorrect email or password');
+        expect(error.graphQLErrors[0].message).toContain(
+          'Incorrect email or password',
+        );
         expect(error.graphQLErrors[0].extensions.code).toBe('UNAUTHENTICATED');
       }
     });
@@ -290,7 +303,9 @@ describe('GraphQL API', () => {
         });
         fail('Should have thrown an error');
       } catch (error: any) {
-        expect(error.graphQLErrors[0].message).toContain('You are not authenticated');
+        expect(error.graphQLErrors[0].message).toContain(
+          'You are not authenticated',
+        );
         expect(error.graphQLErrors[0].extensions.code).toBe('UNAUTHENTICATED');
       }
     });
@@ -332,7 +347,9 @@ describe('GraphQL API', () => {
         });
         fail('Should have thrown an error');
       } catch (error: any) {
-        expect(error.graphQLErrors[0].message).toContain('You are not authenticated');
+        expect(error.graphQLErrors[0].message).toContain(
+          'You are not authenticated',
+        );
         expect(error.graphQLErrors[0].extensions.code).toBe('UNAUTHENTICATED');
       }
     });

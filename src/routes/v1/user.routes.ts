@@ -57,7 +57,7 @@ const router = Router();
  *                     pagination:
  *                       type: object
  *                       properties:
- *                         total: 
+ *                         total:
  *                           type: integer
  *                         limit:
  *                           type: integer
@@ -78,6 +78,8 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.route('/').get(protect, restrictTo(UserRole.ADMIN), cache(600), getAllUsers);
+router
+  .route('/')
+  .get(protect, restrictTo(UserRole.ADMIN), cache(600), getAllUsers);
 
 export default router;

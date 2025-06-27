@@ -79,7 +79,12 @@ const router = Router();
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/register', authRateLimiter, validateRequest(ValidationUtils.userCreateSchema), register);
+router.post(
+  '/register',
+  authRateLimiter,
+  validateRequest(ValidationUtils.userCreateSchema),
+  register,
+);
 
 /**
  * @swagger
@@ -127,7 +132,12 @@ router.post('/register', authRateLimiter, validateRequest(ValidationUtils.userCr
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/login', authRateLimiter, validateRequest(ValidationUtils.userLoginSchema), login);
+router.post(
+  '/login',
+  authRateLimiter,
+  validateRequest(ValidationUtils.userLoginSchema),
+  login,
+);
 
 /**
  * @swagger
@@ -167,7 +177,11 @@ router.post('/login', authRateLimiter, validateRequest(ValidationUtils.userLogin
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/refresh', validateRequest(ValidationUtils.refreshTokenSchema), refresh);
+router.post(
+  '/refresh',
+  validateRequest(ValidationUtils.refreshTokenSchema),
+  refresh,
+);
 
 /**
  * @swagger
@@ -205,7 +219,11 @@ router.post('/refresh', validateRequest(ValidationUtils.refreshTokenSchema), ref
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/logout', validateRequest(ValidationUtils.refreshTokenSchema), logout);
+router.post(
+  '/logout',
+  validateRequest(ValidationUtils.refreshTokenSchema),
+  logout,
+);
 
 /**
  * @swagger
@@ -282,7 +300,12 @@ router.get('/verify-email/:token', verifyEmail);
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/resend-verification', authRateLimiter, validateRequest(ValidationUtils.emailSchema), resendVerificationEmail);
+router.post(
+  '/resend-verification',
+  authRateLimiter,
+  validateRequest(ValidationUtils.emailSchema),
+  resendVerificationEmail,
+);
 
 /**
  * @swagger
@@ -321,7 +344,12 @@ router.post('/resend-verification', authRateLimiter, validateRequest(ValidationU
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.post('/forgot-password', authRateLimiter, validateRequest(ValidationUtils.emailSchema), forgotPassword);
+router.post(
+  '/forgot-password',
+  authRateLimiter,
+  validateRequest(ValidationUtils.emailSchema),
+  forgotPassword,
+);
 
 /**
  * @swagger
@@ -371,6 +399,10 @@ router.post('/forgot-password', authRateLimiter, validateRequest(ValidationUtils
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-router.patch('/reset-password/:token', validateRequest(ValidationUtils.resetPasswordSchema), resetPassword);
+router.patch(
+  '/reset-password/:token',
+  validateRequest(ValidationUtils.resetPasswordSchema),
+  resetPassword,
+);
 
 export default router;

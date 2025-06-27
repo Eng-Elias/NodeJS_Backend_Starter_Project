@@ -36,7 +36,6 @@ export interface IUser extends SoftDeleteDocument {
   passwordResetExpires?: Date;
   refreshTokens?: string[];
   lastLogin?: Date;
-
 }
 
 /**

@@ -6,7 +6,10 @@ import config from '@/config';
 import healthRoutes from '@/routes/health';
 import v1Routes from '@/routes/v1';
 import { Logger } from '@/utils/logger';
-import { globalErrorHandler, errorConverter } from '@/middleware/error.middleware';
+import {
+  globalErrorHandler,
+  errorConverter,
+} from '@/middleware/error.middleware';
 import swaggerUi from 'swagger-ui-express';
 import { healthSwaggerSpec, apiV1SwaggerSpec } from '@/config/swagger';
 import { addSwaggerPathPrefix } from '@/utils/swagger';
@@ -80,7 +83,6 @@ app.get('/api-docs/v1.json', (req, res) => {
 
 const prefixedHealthSpec = addSwaggerPathPrefix(healthSwaggerSpec, '/health');
 
-
 app.get('/api-docs/health.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.send(prefixedHealthSpec);
@@ -112,5 +114,3 @@ app.use(errorConverter);
 app.use(globalErrorHandler);
 
 export { app };
-
-

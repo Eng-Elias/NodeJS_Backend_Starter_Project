@@ -4,7 +4,11 @@ import { DbInjectionSanitizeUtils } from '@/utils/DbInjectionSanitizeUtils';
 /**
  * Middleware to sanitize request body, query, and params to prevent NoSQL injection attacks.
  */
-export const mongoSanitizeMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const mongoSanitizeMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   if (req.body) {
     req.body = DbInjectionSanitizeUtils.mongoSanitize(req.body);
   }

@@ -10,7 +10,10 @@ import { AuthUtils } from '@/utils/AuthUtils';
 import { CustomJwtPayload } from '@/types/user.types';
 import { User } from '@/models/user.model';
 
-export async function setupGraphQLServer(app: Express, httpServer: http.Server) {
+export async function setupGraphQLServer(
+  app: Express,
+  httpServer: http.Server,
+) {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
@@ -26,13 +29,18 @@ export async function setupGraphQLServer(app: Express, httpServer: http.Server) 
     expressMiddleware(server, {
       context: async ({ req }) => {
         let token;
-        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        if (
+          req.headers.authorization &&
+          req.headers.authorization.startsWith('Bearer ')
+        ) {
           token = req.headers.authorization.split(' ')[1];
         }
 
         if (token) {
           try {
-            const decoded = AuthUtils.verifyAccessToken(token) as CustomJwtPayload;
+            const decoded = AuthUtils.verifyAccessToken(
+              token,
+            ) as CustomJwtPayload;
             const user = await User.findById(decoded.id);
             return { user };
           } catch (error) {

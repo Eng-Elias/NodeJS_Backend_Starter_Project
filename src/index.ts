@@ -16,7 +16,9 @@ async function startServer() {
 
   const server = httpServer.listen({ port: config.port }, () => {
     Logger.info(`Server is running on port ${config.port}`);
-    Logger.info(`🚀 GraphQL server ready at http://localhost:${config.port}/graphql`);
+    Logger.info(
+      `🚀 GraphQL server ready at http://localhost:${config.port}/graphql`,
+    );
     SocketUtils.initialize(server);
     SchedulerUtils.startAllWorkers();
   });
@@ -30,9 +32,13 @@ async function startServer() {
       });
 
       await Promise.all([
-        DatabaseUtils.disconnect().then(() => Logger.info('MongoDB disconnected')),
+        DatabaseUtils.disconnect().then(() =>
+          Logger.info('MongoDB disconnected'),
+        ),
         redisClient.quit().then(() => Logger.info('Redis disconnected')),
-        QueueUtils.closeAll().then(() => Logger.info('All Bull queues closed.')),
+        QueueUtils.closeAll().then(() =>
+          Logger.info('All Bull queues closed.'),
+        ),
       ]);
 
       clearInterval(memoryLogInterval);
@@ -48,4 +54,3 @@ startServer().catch((error) => {
   Logger.error('Failed to start server:', error);
   process.exit(1);
 });
-

@@ -53,7 +53,10 @@ export class EventUtils {
    * @param eventName The name of the event to listen for.
    * @param listener The callback function to execute.
    */
-  public static on(eventName: string, listener: (...args: any[]) => void): void {
+  public static on(
+    eventName: string,
+    listener: (...args: any[]) => void,
+  ): void {
     this.emitter.on(eventName, listener);
   }
 
@@ -62,7 +65,10 @@ export class EventUtils {
    * @param eventName The name of the event to listen for.
    * @param listener The callback function to execute.
    */
-  public static once(eventName: string, listener: (...args: any[]) => void): void {
+  public static once(
+    eventName: string,
+    listener: (...args: any[]) => void,
+  ): void {
     this.emitter.once(eventName, listener);
   }
 
@@ -71,7 +77,10 @@ export class EventUtils {
    * @param eventName The name of the event.
    * @param listener The listener function to remove.
    */
-  public static off(eventName: string, listener: (...args: any[]) => void): void {
+  public static off(
+    eventName: string,
+    listener: (...args: any[]) => void,
+  ): void {
     this.emitter.removeListener(eventName, listener);
   }
 }

@@ -13,9 +13,15 @@ export class TemplateUtils {
    * @param data - An object containing data to be injected into the template.
    * @returns The rendered HTML string, or null if the template is not found.
    */
-  public static renderTemplate(templateName: string, data: { [key: string]: string }): string | null {
+  public static renderTemplate(
+    templateName: string,
+    data: { [key: string]: string },
+  ): string | null {
     try {
-      const templatePath = path.join(__dirname, `../templates/${templateName}.template.html`);
+      const templatePath = path.join(
+        __dirname,
+        `../templates/${templateName}.template.html`,
+      );
       let templateContent = fs.readFileSync(templatePath, 'utf-8');
 
       for (const key in data) {

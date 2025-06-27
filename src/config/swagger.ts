@@ -1,7 +1,6 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import { OpenAPIV3 } from 'openapi-types';
 
-
 const swaggerDefinition = {
   openapi: '3.0.0',
   info: {
@@ -80,7 +79,7 @@ const swaggerDefinition = {
       bearerAuth: [],
     },
   ],
-}
+};
 
 const apiV1SwaggerOptions: swaggerJsdoc.Options = {
   definition: swaggerDefinition,
@@ -92,8 +91,12 @@ const healthSwaggerOptions: swaggerJsdoc.Options = {
   apis: ['./src/routes/health.ts'],
 };
 
-const healthSwaggerSpec = swaggerJsdoc(healthSwaggerOptions) as OpenAPIV3.Document;
+const healthSwaggerSpec = swaggerJsdoc(
+  healthSwaggerOptions,
+) as OpenAPIV3.Document;
 
-const apiV1SwaggerSpec = swaggerJsdoc(apiV1SwaggerOptions) as OpenAPIV3.Document;
+const apiV1SwaggerSpec = swaggerJsdoc(
+  apiV1SwaggerOptions,
+) as OpenAPIV3.Document;
 
 export { healthSwaggerSpec, apiV1SwaggerSpec };

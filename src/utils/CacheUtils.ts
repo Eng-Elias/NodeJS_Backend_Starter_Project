@@ -1,12 +1,10 @@
 import { redisClient } from '@/app';
 import { Logger } from '@/utils/logger';
 
-
 export const CACHE_PREFIX = 'cache:';
 export const CACHE_PATTERNS = {
   USERS: `${CACHE_PREFIX}:/api/v1/users*`,
 };
-
 
 /**
  * Utility class for interacting with the Redis cache.
@@ -33,7 +31,11 @@ export class CacheUtils {
    * @param value The value to store.
    * @param ttlSeconds Time-to-live in seconds.
    */
-  static async set<T>(key: string, value: T, ttlSeconds: number): Promise<void> {
+  static async set<T>(
+    key: string,
+    value: T,
+    ttlSeconds: number,
+  ): Promise<void> {
     try {
       await redisClient.set(key, JSON.stringify(value), { EX: ttlSeconds });
     } catch (error) {
@@ -66,6 +68,14 @@ export class CacheUtils {
       }
     } catch (error) {
       Logger.error(`Error deleting cache for pattern ${pattern}:`, error);
+    }
+  }
+
+  static async clear(): Promise<void> {
+    try {
+      await redisClient.flushdb();
+    } catch (error) {
+      Logger.error(`Error clearing cache:`, error);
     }
   }
 }

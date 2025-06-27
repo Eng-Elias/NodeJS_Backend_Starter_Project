@@ -36,7 +36,15 @@ export class EmailService {
    * @param subject - The subject of the email.
    * @param html - The HTML body of the email.
    */
-  public static async sendEmail({ to, subject, html }: { to: string; subject: string; html: string }): Promise<void> {
+  public static async sendEmail({
+    to,
+    subject,
+    html,
+  }: {
+    to: string;
+    subject: string;
+    html: string;
+  }): Promise<void> {
     this.initialize();
 
     if (!this.transporter) {

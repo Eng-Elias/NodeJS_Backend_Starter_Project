@@ -8,7 +8,7 @@ jest.mock('@/services/EmailService');
 
 describe('Background Job Queues', () => {
   const emailQueue = QueueUtils.getQueue({
-    queueName: QUEUE_NAMES.EMAIL
+    queueName: QUEUE_NAMES.EMAIL,
   });
 
   beforeAll(async () => {
@@ -38,7 +38,7 @@ describe('Background Job Queues', () => {
     await EmailUtils.sendVerificationEmail(to, verificationLink);
 
     // Wait for the job to be processed
-    await new Promise(resolve => emailQueue.on('completed', resolve));
+    await new Promise((resolve) => emailQueue.on('completed', resolve));
 
     // Assertions
     expect(sendEmailSpy).toHaveBeenCalledTimes(1);

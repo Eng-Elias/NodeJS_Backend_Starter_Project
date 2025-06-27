@@ -12,9 +12,14 @@ export class EmailUtils {
    * @param to - The recipient's email address.
    * @param verificationLink - The email verification link.
    */
-  public static async sendVerificationEmail(to: string, verificationLink: string): Promise<void> {
+  public static async sendVerificationEmail(
+    to: string,
+    verificationLink: string,
+  ): Promise<void> {
     const subject = 'Verify Your Email Address';
-    const html = TemplateUtils.renderTemplate('emailVerification', { verificationLink });
+    const html = TemplateUtils.renderTemplate('emailVerification', {
+      verificationLink,
+    });
 
     if (!html) {
       Logger.error('Could not render email verification template.');
@@ -22,7 +27,7 @@ export class EmailUtils {
     }
 
     const emailQueue = QueueUtils.getQueue({
-      queueName: QUEUE_NAMES.EMAIL
+      queueName: QUEUE_NAMES.EMAIL,
     });
     await emailQueue.add({ to, subject, html });
   }
@@ -33,7 +38,10 @@ export class EmailUtils {
    * @param to - The recipient's email address.
    * @param resetLink - The password reset link.
    */
-  public static async sendPasswordResetEmail(to: string, resetLink: string): Promise<void> {
+  public static async sendPasswordResetEmail(
+    to: string,
+    resetLink: string,
+  ): Promise<void> {
     const subject = 'Password Reset Request';
     const html = TemplateUtils.renderTemplate('passwordReset', { resetLink });
 
@@ -43,10 +51,8 @@ export class EmailUtils {
     }
 
     const emailQueue = QueueUtils.getQueue({
-      queueName: QUEUE_NAMES.EMAIL
+      queueName: QUEUE_NAMES.EMAIL,
     });
     await emailQueue.add({ to, subject, html });
   }
 }
-
-

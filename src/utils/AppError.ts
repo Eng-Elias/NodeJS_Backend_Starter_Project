@@ -19,7 +19,9 @@ export class AppError extends Error {
     super(message);
 
     this.statusCode = statusCode;
-    this.status = `${statusCode}`.startsWith('4') ? ApiUtils.API_STATUS.FAIL : ApiUtils.API_STATUS.ERROR;
+    this.status = `${statusCode}`.startsWith('4')
+      ? ApiUtils.API_STATUS.FAIL
+      : ApiUtils.API_STATUS.ERROR;
     this.isOperational = isOperational;
 
     if (stack) {

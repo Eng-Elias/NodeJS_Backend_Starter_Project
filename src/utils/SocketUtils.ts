@@ -33,7 +33,10 @@ export class SocketUtils {
       }
 
       try {
-        const decoded = jwt.verify(token, config.jwt.secret) as CustomJwtPayload;
+        const decoded = jwt.verify(
+          token,
+          config.jwt.secret,
+        ) as CustomJwtPayload;
         socket.user = decoded;
         next();
       } catch (error) {
@@ -45,7 +48,9 @@ export class SocketUtils {
     Logger.info('Socket.IO server initialized with authentication.');
 
     this.io.on('connection', (socket: AuthenticatedSocket) => {
-      Logger.info(`Client connected: ${socket.id}, User ID: ${socket.user?.id}`);
+      Logger.info(
+        `Client connected: ${socket.id}, User ID: ${socket.user?.id}`,
+      );
 
       // Automatically join a room for user-specific notifications
       if (socket.user?.id) {
@@ -53,7 +58,9 @@ export class SocketUtils {
       }
 
       socket.on('disconnect', () => {
-        Logger.info(`Client disconnected: ${socket.id}, User ID: ${socket.user?.id}`);
+        Logger.info(
+          `Client disconnected: ${socket.id}, User ID: ${socket.user?.id}`,
+        );
       });
     });
   }

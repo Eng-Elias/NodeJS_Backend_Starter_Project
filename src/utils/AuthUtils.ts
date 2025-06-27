@@ -8,7 +8,6 @@ import { CustomJwtPayload } from '@/types/user.types';
  * Utility class for authentication-related operations.
  */
 export class AuthUtils {
-
   /**
    * Hashes a password using bcrypt.
    * @param password - The password to hash.
@@ -25,7 +24,10 @@ export class AuthUtils {
    * @param hash - The hash to compare against.
    * @returns A promise that resolves to true if the password matches the hash, false otherwise.
    */
-  public static async comparePassword(password: string, hash: string): Promise<boolean> {
+  public static async comparePassword(
+    password: string,
+    hash: string,
+  ): Promise<boolean> {
     return bcrypt.compare(password, hash);
   }
 
@@ -35,7 +37,9 @@ export class AuthUtils {
    * @returns An access token.
    */
   public static generateAccessToken(payload: object): string {
-    return jwt.sign(payload, config.jwt.secret, { expiresIn: config.jwt.expiresIn } as SignOptions);
+    return jwt.sign(payload, config.jwt.secret, {
+      expiresIn: config.jwt.expiresIn,
+    } as SignOptions);
   }
 
   /**
@@ -44,7 +48,9 @@ export class AuthUtils {
    * @returns A refresh token.
    */
   public static generateRefreshToken(payload: object): string {
-    return jwt.sign(payload, config.jwt.refreshSecret, { expiresIn: config.jwt.refreshExpiresIn } as SignOptions);
+    return jwt.sign(payload, config.jwt.refreshSecret, {
+      expiresIn: config.jwt.refreshExpiresIn,
+    } as SignOptions);
   }
 
   /**
@@ -53,9 +59,14 @@ export class AuthUtils {
    * @param isRefreshToken - Whether the token is a refresh token.
    * @returns The decoded payload if the token is valid, otherwise null.
    */
-  public static verifyToken(token: string, isRefreshToken = false): CustomJwtPayload | null {
+  public static verifyToken(
+    token: string,
+    isRefreshToken = false,
+  ): CustomJwtPayload | null {
     try {
-      const secret = isRefreshToken ? config.jwt.refreshSecret : config.jwt.secret;
+      const secret = isRefreshToken
+        ? config.jwt.refreshSecret
+        : config.jwt.secret;
       return jwt.verify(token, secret) as CustomJwtPayload;
     } catch (error) {
       return null;
@@ -84,7 +95,10 @@ export class AuthUtils {
    * Generates a token for email verification or password reset.
    * @returns An object containing the plain token and the hashed token.
    */
-  public static generateVerificationToken(): { token: string; hashedToken: string } {
+  public static generateVerificationToken(): {
+    token: string;
+    hashedToken: string;
+  } {
     const token = crypto.randomBytes(32).toString('hex');
     const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
     return { token, hashedToken };

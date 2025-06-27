@@ -12,7 +12,7 @@ const fileProcessor = async (job: Job<FileJobData>): Promise<void> => {
   Logger.info(`Processing file job ${job.id}`);
   // Implement file processing logic here
   // e.g., read file, transform, save to cloud storage
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate work
+  await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate work
   Logger.info(`File job ${job.id} completed.`);
 };
 

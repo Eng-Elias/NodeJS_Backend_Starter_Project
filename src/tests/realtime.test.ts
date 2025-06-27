@@ -14,7 +14,10 @@ describe('Real-time Features', () => {
   beforeAll((done) => {
     server = app.listen(() => {
       const address = server.address();
-      port = typeof address === 'string' ? parseInt(address.split(':').pop() || '0', 10) : address?.port || 0;
+      port =
+        typeof address === 'string'
+          ? parseInt(address.split(':').pop() || '0', 10)
+          : address?.port || 0;
       if (!port) {
         throw new Error('Server port not found');
       }
@@ -43,7 +46,9 @@ describe('Real-time Features', () => {
     });
 
     it('should not connect with an invalid token', (done) => {
-      clientSocket = io(`http://localhost:${port}`, { auth: { token: 'invalidtoken' } });
+      clientSocket = io(`http://localhost:${port}`, {
+        auth: { token: 'invalidtoken' },
+      });
       clientSocket.on('connect_error', (err: Error) => {
         expect(err.message).toBe('Authentication error: Invalid token.');
         done();
@@ -58,10 +63,14 @@ describe('Real-time Features', () => {
         profile: { firstName: 'Test', lastName: 'User' },
       });
 
-      const accessToken = AuthUtils.generateAccessToken({ id: user._id.toString() });
+      const accessToken = AuthUtils.generateAccessToken({
+        id: user._id.toString(),
+      });
 
       await new Promise<void>((resolve, reject) => {
-        clientSocket = io(`http://localhost:${port}`, { auth: { token: accessToken } });
+        clientSocket = io(`http://localhost:${port}`, {
+          auth: { token: accessToken },
+        });
         clientSocket.on('connect', resolve);
         clientSocket.on('connect_error', reject);
       });

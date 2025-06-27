@@ -5,7 +5,10 @@ import Joi from 'joi';
  */
 export class ValidationUtils {
   public static userCreateSchema = Joi.object({
-    username: Joi.string().pattern(/^[a-zA-Z0-9_\-]{3,}$/).trim().required(),
+    username: Joi.string()
+      .pattern(/^[a-zA-Z0-9_\-]{3,}$/)
+      .trim()
+      .required(),
     email: Joi.string().email().trim().lowercase().required(),
     password: Joi.string().min(8).required(),
     firstName: Joi.string().trim().required(),
@@ -39,7 +42,9 @@ export class ValidationUtils {
   public static validate(schema: Joi.ObjectSchema, data: any) {
     const { error, value } = schema.validate(data);
     if (error) {
-      throw new Error(`Validation error: ${error.details.map((x) => x.message).join(', ')}`);
+      throw new Error(
+        `Validation error: ${error.details.map((x) => x.message).join(', ')}`,
+      );
     }
     return value;
   }

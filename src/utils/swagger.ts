@@ -18,7 +18,8 @@ export const addSwaggerPathPrefix = (
     if (Object.prototype.hasOwnProperty.call(swaggerSpec.paths, path)) {
       const cleanPath = path.startsWith('/') ? path : `/${path}`;
       // If the original path is just '/', use the prefix itself, otherwise join them.
-      const finalPath = path === '/' ? cleanPrefix : `${cleanPrefix}${cleanPath}`;
+      const finalPath =
+        path === '/' ? cleanPrefix : `${cleanPrefix}${cleanPath}`;
       newPaths[finalPath] = swaggerSpec.paths[path] as OpenAPIV3.PathItemObject;
     }
   }
